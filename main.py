@@ -1,19 +1,23 @@
 import base64
-import boto3,json
+import boto3
+import json
 import os
 from flask import Flask, request, jsonify, Response, redirect, send_file
 from botocore.exceptions import ClientError
 import uuid
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 BUCKET = "hecker-bucket"
+
 
 @app.route('/generate', methods=['GET'])
 def generate_image():
     query_dict = request.args.to_dict(flat=False)
 
     prompt = query_dict.get('prompt', [None])[0]
-    
+
     client = boto3.client("bedrock-runtime", region_name="us-east-1")
 
     model_id = "anthropic.claude-v2"
@@ -30,8 +34,9 @@ def generate_image():
         response = client.converse(
             modelId="anthropic.claude-v2",
             messages=conversation,
-            inferenceConfig={"maxTokens":2400,"stopSequences":["\n\nHuman:"],"temperature":1,"topP":1},
-            additionalModelRequestFields={"top_k":250}
+            inferenceConfig={"maxTokens": 2400, "stopSequences": [
+                "\n\nHuman:"], "temperature": 1, "topP": 1},
+            additionalModelRequestFields={"top_k": 250}
         )
 
         response_text = response["output"]["message"]["content"][0]["text"]
@@ -39,14 +44,14 @@ def generate_image():
 
     except (ClientError, Exception) as e:
         print(f"ERROR: Can't invoke '{model_id}'. Reason: {e}")
-        return jsonify({'error': 'Error in generating prompt from Text model', 'reason':f'Model id: {model_id}, {e}'})
-    
-    
+        return jsonify({'error': 'Error in generating prompt from Text model', 'reason': f'Model id: {model_id}, {e}'})
+
     client = boto3.client("bedrock-runtime", region_name="us-east-1")
-    
+
     model_id = "stability.stable-diffusion-xl-v1"
 
-    native_request = {"text_prompts":[{"text":f"{response_text}","weight":1}],"cfg_scale":10,"steps":50,"seed":0,"width":1024,"height":1024,"samples":1}
+    native_request = {"text_prompts": [{"text": f"{response_text}", "weight": 1}],
+                      "cfg_scale": 10, "steps": 50, "seed": 0, "width": 1024, "height": 1024, "samples": 1}
 
     model_request = json.dumps(native_request)
 
@@ -69,8 +74,8 @@ def generate_image():
             for obj in page['Contents']:
                 key = obj['Key']
                 image_url = f"https://s3.amazonaws.com/{BUCKET}/{key}"
-                image_urls.append(image_url) 
-    
+                image_urls.append(image_url)
+
     return jsonify({'current': f"https://s3.amazonaws.com/{BUCKET}/{filename}", 'images': image_urls})
 
 
@@ -80,5 +85,6 @@ def detect_speech():
 
     prompt = query_dict.get('prompt', [None])[0]
 
+
 if __name__ == '__main__':
-	app.run(debug = True)
+    app.run(debug=True)

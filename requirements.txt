@@ -5,3 +5,4 @@ jsonify
 pillow
 idna
 requests
+flask-cors
