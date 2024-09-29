@@ -1,6 +1,6 @@
 {
-    "name": "campaign",
-    "short_name": "campaign",
+    "name": "camoa",
+    "short_name": "camoa",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

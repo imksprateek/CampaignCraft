@@ -1,4 +1,4 @@
-package com.example.campaign
+package com.example.camoa
 
 import io.flutter.embedding.android.FlutterActivity
 
