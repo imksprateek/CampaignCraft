@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "campaign" "\0"
+            VALUE "FileDescription", "camoa" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "campaign" "\0"
+            VALUE "InternalName", "camoa" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "campaign.exe" "\0"
-            VALUE "ProductName", "campaign" "\0"
+            VALUE "OriginalFilename", "camoa.exe" "\0"
+            VALUE "ProductName", "camoa" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
